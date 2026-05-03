@@ -81,6 +81,7 @@ OPTION (TENGINE_ENABLE_TIM_VX               "With VeriSilicon TIM-VX support"   
 OPTION (TENGINE_ENABLE_TORCH                "With libTorch support"                     OFF)
 OPTION (TENGINE_ENABLE_NNIE                 "With HiSilicon NNIE support"               OFF)
 OPTION (TENGINE_ENABLE_VULKAN               "With Khronos Vulkan GPU compute support"   OFF)
+OPTION (TENGINE_ENABLE_MUSA                 "With Moore Threads MUSA support"           OFF)
 
 # Debug options
 OPTION (TENGINE_DEBUG_DATA                  "Extract feature map for each layer"        OFF)
@@ -97,6 +98,7 @@ OPTION (TENGINE_ONLINE_REPORT               "online report"                     
 # Do check list
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/check.cmake")
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cuda.cmake")
+INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/musa.cmake")
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/torch.cmake")
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/registry.cmake")
 INCLUDE ("${CMAKE_CURRENT_SOURCE_DIR}/cmake/utility.cmake")

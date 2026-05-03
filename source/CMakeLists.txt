@@ -366,6 +366,36 @@ IF (TENGINE_TOOLCHAIN_CXX_FLAG)
 ENDIF()
 
 
+# MUSA above option
+IF (TENGINE_ENABLE_MUSA)
+    SET (_MUSA_OBJECT_FILES "")
+    FOREACH(_MU_SOURCE ${TENGINE_MUSA_MU_SOURCES})
+        GET_FILENAME_COMPONENT(_MU_NAME ${_MU_SOURCE} NAME_WE)
+        SET(_OBJ_FILE "${CMAKE_CURRENT_BINARY_DIR}/musa_${_MU_NAME}.o")
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${_OBJ_FILE}
+            COMMAND ${MUSA_MCC_EXECUTABLE}
+                --cuda-gpu-arch=mp_22
+                -O2 -std=c++14 -fPIC
+                -I${CMAKE_SOURCE_DIR}/source/device/musa
+                -I${CMAKE_SOURCE_DIR}/source
+                -I${CMAKE_BINARY_DIR}/source
+                -I${CMAKE_SOURCE_DIR}/source/operator/prototype
+                -I${MUSA_INCLUDE_DIRS}
+                -c ${_MU_SOURCE} -o ${_OBJ_FILE}
+            DEPENDS ${_MU_SOURCE}
+            COMMENT "Compiling MUSA: ${_MU_SOURCE}")
+        LIST(APPEND _MUSA_OBJECT_FILES ${_OBJ_FILE})
+    ENDFOREACH()
+
+    ADD_LIBRARY(tengine_musa_kernels OBJECT IMPORTED)
+    SET_PROPERTY(TARGET tengine_musa_kernels PROPERTY IMPORTED_OBJECTS ${_MUSA_OBJECT_FILES})
+
+    TARGET_SOURCES (${TENGINE_LITE_NAME}-static PRIVATE ${_MUSA_OBJECT_FILES})
+    TARGET_SOURCES (${TENGINE_LITE_NAME}        PRIVATE ${_MUSA_OBJECT_FILES})
+ENDIF()
+
+
 # cuda above option
 IF (TENGINE_ENABLE_CUDA)
     IF (TENGINE_ENV_HAS_CXX14)
